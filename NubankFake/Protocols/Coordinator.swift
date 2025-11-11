@@ -15,7 +15,7 @@ protocol Coordinator : AnyObject {
 }
 
 extension Coordinator {
-    func childDidFinish(_ child: Coordinator) {
+    func childDidFinish(_ child: Coordinator?) {
         if let index = childCoordinators.firstIndex(where: { $0 === child }) {
             childCoordinators.remove(at: index)
         }
