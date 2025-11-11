@@ -17,7 +17,9 @@ struct PixData: Codable, Identifiable {
     init(id: UUID = UUID(), recipientName: String,cidade: String, recipientBank: String, recipientCPF: String){
         self.id = id
         self.recipientName = recipientName
+        self.cidade = cidade
         self.recipientBank = recipientBank
         self.recipientCPF = recipientCPF
+
     }
 }
