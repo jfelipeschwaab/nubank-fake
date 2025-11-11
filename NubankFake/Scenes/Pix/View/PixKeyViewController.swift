@@ -9,6 +9,8 @@
 import UIKit
 
 final class PixKeyViewController: UIViewController {
+    
+    weak var coordinator: PixCoordinator?
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -45,6 +47,7 @@ final class PixKeyViewController: UIViewController {
         title = "Chave Pix"
         setupView()
         setupLayout()
+        continueButton.addTarget(self, action: #selector(didTapContinue), for: .touchUpInside)
     }
 
     private func setupView() {
@@ -69,5 +72,10 @@ final class PixKeyViewController: UIViewController {
             continueButton.trailingAnchor.constraint(equalTo: keyTextField.trailingAnchor),
             continueButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    
+    @objc private func didTapContinue() {
+        coordinator?.showPixConfirmationScreen()
     }
 }

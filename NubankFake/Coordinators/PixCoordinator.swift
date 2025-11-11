@@ -31,7 +31,26 @@ final class PixCoordinator : Coordinator {
     
     func showPixKeyScreen() {
         let pixKeyViewController = PixKeyViewController()
+        pixKeyViewController.coordinator = self
         navigationController.pushViewController(pixKeyViewController, animated: true)
+    }
+    
+    func showPixConfirmationScreen() {
+        let pixConfirmationViewController = PixConfirmationViewController()
+        pixConfirmationViewController.coordinator = self
+        navigationController.pushViewController(pixConfirmationViewController, animated: true)
+    }
+    
+    func showPixValueScreen() {
+        let pixValueViewController = PixValueViewController()
+        pixValueViewController.coordinator = self
+        navigationController.pushViewController(pixValueViewController, animated: true)
+    }
+    
+    func showSecondPixConfirmationScreen(valueToConfirm : Double) {
+        let pixConfirmationViewController = PixConfirmationViewController(hasValue: true, value: valueToConfirm)
+        
+        navigationController.pushViewController(pixConfirmationViewController, animated: true)
     }
 }
 
