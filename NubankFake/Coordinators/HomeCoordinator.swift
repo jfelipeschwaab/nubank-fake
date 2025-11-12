@@ -27,4 +27,18 @@ class HomeCoordinator: Coordinator {
     private func showHome(){
         navigationController.setViewControllers([factory.make(coordinator: self)], animated: true)
     }
+    
+//    func showPix() {
+//        let pixCoordinator = PixCoordinator(navigationController: navigationController)
+//        pixCoordinator.parentCoordinator = self
+//        pixCoordinator.start()
+//        childCoordinators.append(pixCoordinator)
+//    }
+    
+//    func showRecharge() {
+//                let rechargeCoordinator = RechargeCoordinator(navigationController: navigationController)
+//                rechargeCoordinator.parentCoordinator = self
+//                rechargeCoordinator.start()
+//                childCoordinators.append(rechargeCoordinator)
+//            }
 }

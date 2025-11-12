@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 protocol HomeViewDelegate: AnyObject {
-    
+//    func didTapRecharge()
+    func didTapPix()
 }
 
 class HomeView: UIView {
@@ -40,6 +41,7 @@ class HomeView: UIView {
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.layer.cornerRadius = 25
+        button.addTarget(nil, action: #selector(pixTapped), for: .touchUpInside)
         return button
     }()
     private let labelTransfer: UILabel = {
@@ -49,6 +51,7 @@ class HomeView: UIView {
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
@@ -124,6 +127,10 @@ class HomeView: UIView {
     func setupBinding(with data: HomeModel) {
         saudacao.text = "Olá, \(data.name)"
         saldoMensagem.text = "Saldo: R$ \(data.balance)"
+    }
+    
+    @objc private func pixTapped() {
+        delegate?.didTapPix()
     }
 }
 
