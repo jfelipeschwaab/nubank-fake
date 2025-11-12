@@ -21,6 +21,7 @@ final class PixCoordinator : Coordinator {
     }
     
     func start() {
+//        let pixViewModel = nil //TODO: Implementar pixViewModel
 //        let pixViewModel = nil //TODO: Implementar ViewModel na View
         let pixViewController = PixViewController()
         //pixViewModel.coordinator = self
