@@ -1,9 +1,7 @@
-//
 //  File.swift
 //  NubankFake
 //
 //  Created by João Felipe Schwaab on 11/11/25.
-//
 
 import Foundation
 import UIKit
@@ -21,5 +19,21 @@ class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        view = homeView
+        homeView.delegate = self
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Home"
+        viewModel.onDataLoaded = { [weak self] data in
+            self?.homeView.setupBinding(with: data)
+        }
+        viewModel.loadHomeData()
+    }
+}
+
+extension HomeViewController: HomeViewDelegate {
     
 }

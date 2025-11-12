@@ -22,8 +22,15 @@ final class AppCoordinator : Coordinator {
     }
     
     func start() {
+        showHomeCoordinator()
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
+    }
+    func showHomeCoordinator(){
+        let onboardingCoordinator = HomeCoordinator(navigationController: navigationController)
+        onboardingCoordinator.parentCoordinator = self
+        onboardingCoordinator.start()
+        childCoordinators.append(onboardingCoordinator)
     }
     
     func childDidFinish(_ child: Coordinator?) {
