@@ -21,6 +21,7 @@ class LoginViewModel {
     // ViewModel
     var shouldShowNuBankPassword: ((Bool) -> Void)?
 
+   
     
     // Recebe o serviço no construtor (Injeção de Dependência)
     init(coordinator: LoginCoordinator, authService: LocalAuthServiceProtocol) {
@@ -30,11 +31,13 @@ class LoginViewModel {
 }
 
 extension LoginViewModel {
+    
+    
     // função chamada pelo LoginViewController quando o usuário CANCELA o Face ID
-        func didTapPasswordButton() {
-            //  Pede ao Coordinator para abrir a nova tela de senha
-            coordinator.showNuBankPasswordScreen()
-        }
+    func didTapPasswordButton() {
+        //  Pede ao Coordinator para abrir a nova tela de senha
+        coordinator.showNuBankPasswordScreen()
+    }
     
     func authenticateWithFaceID() {
         print("começou a autenticação de face ID no model")
@@ -45,16 +48,15 @@ extension LoginViewModel {
         authService.authenticate(reason: reason) { [weak self] result in
             
             switch result {
-            case .success:
+            case .success(let account):
                 // SUCESSO! Chama o Coordinator
-                
-                self?.coordinator.userDidAuthenticateSuccessfully()
+                self?.coordinator.userDidAuthenticateSuccessfully(account: account)
                 
                 
             case .failure(let laError):
                 // FALHA! Manipula o erro (agora um LAError)
                 self?.handleAuthenticationFailure(error: laError)
-              
+                
             }
         }
     }
@@ -62,33 +64,35 @@ extension LoginViewModel {
     func validateNuBankPassword(_ password: String) {
         // Exemplo
         if password == "1234" {
-            coordinator.userDidAuthenticateSuccessfully()
-        } else {
-            print("Senha incorreta")
-            // Pode chamar outro alert ou incrementar tentativas
+            if let user = AuthService.shared.validate(password: password) {
+                coordinator.userDidAuthenticateSuccessfully(account: user)
+            } else {
+                print("Senha incorreta")
+                // Pode chamar outro alert ou incrementar tentativas
+            }
         }
     }
-
-    
-     func handleAuthenticationFailure(error: Error?) {
-        guard let error = error else { return }
-        let laError = LAError(_nsError: error as NSError)
         
-        // Incrementa tentativas apenas se a biometria falhou
-         if laError.code == .authenticationFailed {
-                     if authenticationAttemptCount >= maxAttempts {
-                         print("Esgotadas tentativas. Navegando para Senha do Nubank.")
-                         coordinator.showNuBankPasswordScreen() // ⬅️
-                     }
-                 }
-                 
-                 // Se o usuário cancelou
-                 if laError.code == .userCancel {
-                     print("Usuário cancelou o login com a senha do iPhone. Indo para Senha do Nubank.")
-                     coordinator.showNuBankPasswordScreen() // CHAMA O COORDINATOR
-                    
-                 }
-             }
-
+        
+        func handleAuthenticationFailure(error: Error?) {
+            guard let error = error else { return }
+            let laError = LAError(_nsError: error as NSError)
+            
+            // Incrementa tentativas apenas se a biometria falhou
+            if laError.code == .authenticationFailed {
+                if authenticationAttemptCount >= maxAttempts {
+                    print("Esgotadas tentativas. Navegando para Senha do Nubank.")
+                    coordinator.showNuBankPasswordScreen() // ⬅️
+                }
+            }
+            
+            // Se o usuário cancelou
+            if laError.code == .userCancel {
+                print("Usuário cancelou o login com a senha do iPhone. Indo para Senha do Nubank.")
+                coordinator.showNuBankPasswordScreen() // CHAMA O COORDINATOR
+                
+            }
+        }
     }
+    
 

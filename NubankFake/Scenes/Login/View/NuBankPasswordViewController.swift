@@ -60,7 +60,6 @@ class NuBankPasswordViewController: UIViewController {
         
         
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         
         view.addSubview(passwordField)
         view.addSubview(submitButton)

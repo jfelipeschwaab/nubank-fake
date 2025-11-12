@@ -11,11 +11,11 @@ import LocalAuthentication
 
 protocol LocalAuthServiceProtocol {
     // Define o que o Serviço LOCAL deve fazer
-    func authenticate(reason: String, completion: @escaping (Result<Void, LAError>) -> Void)
+    func authenticate(reason: String, completion: @escaping (Result<Account, LAError>) -> Void)
 }
 
 //protocolo pro serviço "da nunbank"
 protocol AppAuthServiceProtocol {
-    func validate(password: String) -> User?
+    func validate(password: String) -> Account?
 }
 

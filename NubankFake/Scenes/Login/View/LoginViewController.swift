@@ -9,9 +9,6 @@ import UIKit
 
 final class LoginViewController: UIViewController {
     /**É uma UIViewController (um controlador de tela do UIKit) e o uso de final significa que ela não pode ser herdada.**/
-    
-    
-    
     // MARK: - Acesso à View concreta
     var loginView: LoginView {
         return view as! LoginView
@@ -42,6 +39,7 @@ final class LoginViewController: UIViewController {
         setupActions()
         bindViewModel()
     }
+    
     
     // MARK: - Configurações
     private func setupActions() {

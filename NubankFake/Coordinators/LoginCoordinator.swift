@@ -11,16 +11,6 @@ import LocalAuthentication
 
 class LoginCoordinator: Coordinator {
     
-    func childDidFinish(_ child: (any Coordinator)?) {
-        // Garantir que a referência do Coordinator não seja nula
-            guard let child = child else { return }
-
-            // Iterar sobre o array de childCoordinators
-            if let index = childCoordinators.firstIndex(where: { $0 === child }) {
-                // Remover o Coordinator filho da lista
-                childCoordinators.remove(at: index)
-            }
-    }
     var parentCoordinator: (any Coordinator)?
     
     var navigationController: UINavigationController//É o guia do iOS (UINavigationController) que o Coordinator usa para empilhar e mostrar as telas
@@ -28,7 +18,7 @@ class LoginCoordinator: Coordinator {
     
     // Closure para notificar o Coordinator pai (ex: AppCoordinator) que o fluxo terminou
     // Ele será chamado quando o login for bem-sucedido.
-    var didFinishLogin: (() -> Void)?
+    var didFinishLogin: ((Account) -> Void)? //  PASSA O OBJETO USER
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -40,8 +30,8 @@ class LoginCoordinator: Coordinator {
     }
 
     //função é chamada pelo ViewModel quando aprovada (Face ID ou senha funcionou). Tudo o que ela faz é tocar o Sino (didFinishLogin?()) para que o AppCoordinator assuma o controle e mude para a tela Home.
-    func userDidAuthenticateSuccessfully() {
-        didFinishLogin?()
+    func userDidAuthenticateSuccessfully(account: Account) {
+        didFinishLogin?(account)
         
     }
 }
@@ -75,7 +65,8 @@ extension LoginCoordinator {
             if authService.validate(password: password) != nil {
                 //  Sucesso
                 print("Login Nubank com senha bem-sucedido. Fechando tela.")
-                self.userDidAuthenticateSuccessfully()
+                let account = Account(id: 3, nome: "lolo", accountBalance: 100)
+                self.userDidAuthenticateSuccessfully(account: account)
                 nuBankVC.dismiss(animated: true) //  FECHA a tela APENAS no sucesso
             } else {
                 //  falha

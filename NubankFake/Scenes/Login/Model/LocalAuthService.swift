@@ -11,9 +11,10 @@ import LocalAuthentication
 //autenticação local
 
 class LocalAuthService: LocalAuthServiceProtocol {
-    func authenticate(reason: String, completion: @escaping (Result<Void, LAError>) -> Void) {
+    func authenticate(reason: String, completion: @escaping (Result<Account, LAError>) -> Void) {
         let context = LAContext()
         var error: NSError?
+    
         
         /**reason: texto mostrado na tela do Face ID / Touch ID (ex: “Autorize para acessar sua conta”).
          completion: closure que será chamada quando a autenticação terminar, retornando:
@@ -35,7 +36,8 @@ class LocalAuthService: LocalAuthServiceProtocol {
                                    localizedReason: reason) { success, authError in
                 DispatchQueue.main.async {
                     if success {
-                        completion(.success(()))
+                        let account = Account(id: 3, nome: "lolo", accountBalance: 100)
+                        completion(.success((account)))
                     } else if let laError = authError as? LAError {
                         completion(.failure(laError))
                     } else {
