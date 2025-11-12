@@ -15,6 +15,8 @@ final class PixCoordinator : Coordinator {
     weak var parentCoordinator : Coordinator?
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
+    
+    private var builder = BuilderPixTransaction()
         
     init(navigationController : UINavigationController) {
         self.navigationController = navigationController
