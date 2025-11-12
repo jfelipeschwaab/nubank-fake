@@ -10,7 +10,7 @@ import UIKit
 
 protocol HomeViewDelegate: AnyObject {
 //    func didTapRecharge()
-    func didTapPix()
+//    func didTapPix()
 }
 
 class HomeView: UIView {
@@ -130,7 +130,7 @@ class HomeView: UIView {
     }
     
     @objc private func pixTapped() {
-        delegate?.didTapPix()
+//        delegate?.didTapPix()
     }
 }
 

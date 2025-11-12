@@ -27,8 +27,8 @@ class HomeViewModel{
         }
     }
     
-    func goToPix() {
-        coordinator?.showPix()
-
-    }
+//    func goToPix() {
+//        coordinator?.showPix()
+//
+//    }
 }
