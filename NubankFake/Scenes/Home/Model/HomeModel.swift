@@ -10,5 +10,5 @@ import UIKit
 
 struct HomeModel {
     let name: String
-    let balance: Double
+    let accountBalance: Double
 }

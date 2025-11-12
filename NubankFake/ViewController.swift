@@ -1,19 +1,19 @@
+////
+////  ViewController.swift
+////  NubankFake
+////
+////  Created by João Felipe Schwaab on 11/11/25.
+////
 //
-//  ViewController.swift
-//  NubankFake
+//import UIKit
 //
-//  Created by João Felipe Schwaab on 11/11/25.
+//class ViewController: UIViewController {
 //
-
-import UIKit
-
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
-
-
-}
-
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        // Do any additional setup after loading the view.
+//    }
+//
+//
+//}
+//

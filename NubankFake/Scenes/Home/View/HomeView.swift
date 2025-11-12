@@ -126,7 +126,7 @@ class HomeView: UIView {
     
     func setupBinding(with data: HomeModel) {
         saudacao.text = "Olá, \(data.name)"
-        saldoMensagem.text = "Saldo: R$ \(data.balance)"
+        saldoMensagem.text = "Saldo: R$ \(data.accountBalance)"
     }
     
     @objc private func pixTapped() {

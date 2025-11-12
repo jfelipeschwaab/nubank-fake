@@ -6,15 +6,15 @@
 //
 
 struct Account {
-    let id: String
+    let id: Int
     let userName: String
-    let balance: Double
+    let accountBalance: Double
 }
 
 struct MockData {
     static let joaoAccount = Account(
-        id: "1",
+        id: 1,
         userName: "João",
-        balance: 1234.56
+        accountBalance: 1234.56
     )
 }

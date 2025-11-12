@@ -23,7 +23,6 @@ class HomeViewModel{
         service.getHomeData { [weak self] data in
             self?.homeData = data
             self?.onDataLoaded?(data)
-
         }
     }
     
