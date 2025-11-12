@@ -22,8 +22,15 @@ final class AppCoordinator : Coordinator {
     }
     
     func start() {
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+        window.rootViewController = navigationController //define a Janela Principal (window) para ser controlada pelo Navegador (navigationController). O Navegador é agora o ponto de partida de tudo.
+        window.makeKeyAndVisible() //Liga a tela, O aplicativo agora aparece para o usuário.
+        showLogin()
+    }
+    
+    func showLogin() {
+        let loginCoordinator = LoginCoordinator(navigationController: navigationController) //cria o loginCoordinator
+        childCoordinators.append(loginCoordinator) // add como filho
+        loginCoordinator.start() //começa o fluxo do login
     }
     
     func childDidFinish(_ child: Coordinator?) {
@@ -33,3 +40,4 @@ final class AppCoordinator : Coordinator {
         }
     }
 }
+ 
