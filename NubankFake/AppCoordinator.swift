@@ -24,6 +24,8 @@ final class AppCoordinator : Coordinator {
     func start() {
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
+        
+        iniciarFluxoRecarga()
     }
     
     func childDidFinish(_ child: Coordinator?) {
@@ -31,5 +33,25 @@ final class AppCoordinator : Coordinator {
         if let index = childCoordinators.firstIndex(where: { $0 === child }) {
             childCoordinators.remove(at: index)
         }
+    }
+    
+    
+    func iniciarFluxoRecarga() {
+        
+        //  O AppCoordinator cria a dependência
+        let recargaService = RecargaServiceMock()
+         let paymentService = PaymentMethodServiceMock() 
+        
+        //  O AppCoordinator cria o RecargaCoordinator
+        let recargaCoordinator = RecargaCoordinator(
+            navigationController: self.navigationController,
+            recargaService: recargaService,
+            paymentService: paymentService 
+        )
+        
+        //  Adiciona como filho e inicia
+        childCoordinators.append(recargaCoordinator)
+        recargaCoordinator.parentCoordinator = self
+        recargaCoordinator.start()
     }
 }
