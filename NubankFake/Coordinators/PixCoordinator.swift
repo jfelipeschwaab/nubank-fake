@@ -34,8 +34,9 @@ final class PixCoordinator : Coordinator {
     
     func showPixKeyScreen() {
         //TODO: Implementar ViewModel na View
-        let pixKeyViewController = PixKeyViewController()
-        pixKeyViewController.coordinator = self
+        let pixService = PixService()
+        let viewModel = PixKeyViewModel(pixService: pixService, builder: self.builder, coordinator: self)
+        let pixKeyViewController = PixKeyViewController(viewModel: viewModel)
         navigationController.pushViewController(pixKeyViewController, animated: true)
     }
     

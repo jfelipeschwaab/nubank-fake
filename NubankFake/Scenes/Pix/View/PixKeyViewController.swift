@@ -7,10 +7,22 @@
 
 
 import UIKit
+import Combine
 
 final class PixKeyViewController: UIViewController {
     
-    weak var coordinator: PixCoordinator?
+    var viewModel : PixKeyViewModel
+    private var cancellables = Set<AnyCancellable>()
+
+    
+    init(viewModel: PixKeyViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -23,7 +35,7 @@ final class PixKeyViewController: UIViewController {
 
     private let keyTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Ex: email@dominio.com"
+        textField.placeholder = "exemplo@email.com"
         textField.borderStyle = .roundedRect
         textField.autocapitalizationType = .none
         textField.keyboardType = .emailAddress
@@ -48,6 +60,8 @@ final class PixKeyViewController: UIViewController {
         setupView()
         setupLayout()
         continueButton.addTarget(self, action: #selector(didTapContinue), for: .touchUpInside)
+        keyTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        setupBindings()
     }
 
     private func setupView() {
@@ -76,6 +90,27 @@ final class PixKeyViewController: UIViewController {
     
     
     @objc private func didTapContinue() {
-        coordinator?.showPixConfirmationScreen()
+        viewModel.validateKey()
+    }
+    
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        viewModel.key = textField.text ?? ""
+    }
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "Erro", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func setupBindings() {
+        viewModel.$errorMessage
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                self?.showAlert(message: message)
+            }
+            .store(in: &cancellables)
     }
 }
+
