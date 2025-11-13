@@ -18,9 +18,11 @@ final class AppCoordinator : Coordinator {
     }
     
     func start() {
+
         window.rootViewController = navigationController //define a Janela Principal (window) para ser controlada pelo Navegador (navigationController). O Navegador é agora o ponto de partida de tudo.
         window.makeKeyAndVisible() //Liga a tela, O aplicativo agora aparece para o usuário.
         showLogin()
+
     }
     
     func showLogin() {
@@ -35,5 +37,25 @@ final class AppCoordinator : Coordinator {
         homeCoordinator.parentCoordinator = self
         homeCoordinator.start()
         childCoordinators.append(homeCoordinator)
+    }
+    
+    
+    func iniciarFluxoRecarga() {
+        
+        //  O AppCoordinator cria a dependência
+        let recargaService = RecargaServiceMock()
+         let paymentService = PaymentMethodServiceMock() 
+        
+        //  O AppCoordinator cria o RecargaCoordinator
+        let recargaCoordinator = RecargaCoordinator(
+            navigationController: self.navigationController,
+            recargaService: recargaService,
+            paymentService: paymentService 
+        )
+        
+        //  Adiciona como filho e inicia
+        childCoordinators.append(recargaCoordinator)
+        recargaCoordinator.parentCoordinator = self
+        recargaCoordinator.start()
     }
 }
