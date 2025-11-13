@@ -11,15 +11,17 @@ import Combine
 class PixKeyViewModel {
     
     private let pixService: PixServiceProtocol
+    private let builder: BuilderPixTransaction
+    weak var coordinator: PixCoordinator?
     
-    var onKeyValidated: ((PixData) -> Void)?
-    
-    @Published var key: String = ""
+    @Published var key: String = " "
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
-    init(pixService: PixServiceProtocol) {
+    init(pixService: PixServiceProtocol, builder: BuilderPixTransaction, coordinator: PixCoordinator) {
         self.pixService = pixService
+        self.builder = builder
+        self.coordinator = coordinator
     }
     
     ///Ação chamada pelo botão Avançar da View
@@ -34,9 +36,21 @@ class PixKeyViewModel {
             
             switch result {
             case .success(let pixData):
-                onKeyValidated?(pixData)
-            case .failure(let error):
-                errorMessage = error.localizedDescription
+                print("DEU SUCESSO")
+                builder
+                    .setPixKey(key)
+                    .setRecipientName(pixData.recipientName)
+                    .setCidade(pixData.cidade)
+                    .setRecipientBank(pixData.recipientBank)
+                    .setRecipientCpf(pixData.recipientCPF)
+                print("BUILDER SENDO POPULADO")
+                
+                coordinator?.showPixConfirmationScreen()
+                
+            case .failure(_):
+                let message = "Chave pix inválida. Tente novamente"
+                errorMessage = message
+                
             }
         }
     }
