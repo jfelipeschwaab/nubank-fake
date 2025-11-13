@@ -8,11 +8,11 @@
 struct Account {
     let id: Int
     let userName: String
-    let accountBalance: Double
+    var accountBalance: Double
 }
 
 struct MockData {
-    static let joaoAccount = Account(
+    static var joaoAccount = Account(
         id: 1,
         userName: "João",
         accountBalance: 1234.56

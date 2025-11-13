@@ -35,10 +35,10 @@ class HomeCoordinator: Coordinator {
 //        childCoordinators.append(pixCoordinator)
 //    }
     
-//    func showRecharge() {
-//                let rechargeCoordinator = RechargeCoordinator(navigationController: navigationController)
-//                rechargeCoordinator.parentCoordinator = self
-//                rechargeCoordinator.start()
-//                childCoordinators.append(rechargeCoordinator)
-//            }
+    func showRecharge() {
+                let rechargeCoordinator = RecargaCoordinator(navigationController: navigationController)
+                rechargeCoordinator.parentCoordinator = self
+                rechargeCoordinator.start()
+                childCoordinators.append(rechargeCoordinator)
+            }
 }

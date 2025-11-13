@@ -54,6 +54,8 @@ class RecargaFormaPag2View: UIViewController {
         title = "Escolha o Valor"
         view.backgroundColor = .white
         setupUI()
+        
+        bindViewModel()
     }
     
     private func setupUI() {
@@ -74,9 +76,30 @@ class RecargaFormaPag2View: UIViewController {
             recarregarButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
-
-    // --- Ações da View (que só repassam para o ViewModel) ---
     
+    
+    
+    // 2. ADICIONE ESSA NOVA FUNÇÃO
+    private func bindViewModel() {
+        // "Ouvindo" o estado de carregamento da ViewModel
+        viewModel.isLoading = { [weak self] (carregando) in
+            
+            // Sempre atualize a UI na thread principal!
+            DispatchQueue.main.async {
+                // Desativa o botão se estiver carregando
+                self?.recarregarButton.isEnabled = !carregando
+                
+                // Bônus: Muda o texto para dar feedback ao usuário
+                if carregando {
+                    self?.recarregarButton.setTitle("Recarregando...", for: .disabled)
+                } else {
+                    self?.recarregarButton.setTitle("Recarregar", for: .normal)
+                }
+            }
+        }
+    }
+    // --- Ações da View (que só repassam para o ViewModel) ---
+
     @objc private func valor20Tocado() {
         viewModel.selecionarValor(20.0)
     }

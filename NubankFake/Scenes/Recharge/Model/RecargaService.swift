@@ -19,8 +19,8 @@ class RecargaServiceMock: RecargaServiceProtocol {
         
         // Simula uma demora de rede de 1 segundo
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            // regra de 12 dígitos
-            let ehValido = numero.count >= 12
+            // regra de 11 dígitos
+            let ehValido = numero.count >= 11
             print("Serviço: Número é válido? \(ehValido)")
             completion(ehValido)
         }

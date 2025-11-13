@@ -15,7 +15,7 @@ class RecargaNumeroView: UIViewController {
     // UI Simples
     lazy var numeroTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Seu número (9 dígitos)"
+        tf.placeholder = "Seu número (11 dígitos)"
         tf.borderStyle = .roundedRect
         tf.keyboardType = .phonePad
         tf.translatesAutoresizingMaskIntoConstraints = false

@@ -39,23 +39,4 @@ final class AppCoordinator : Coordinator {
         childCoordinators.append(homeCoordinator)
     }
     
-    
-    func iniciarFluxoRecarga() {
-        
-        //  O AppCoordinator cria a dependência
-        let recargaService = RecargaServiceMock()
-         let paymentService = PaymentMethodServiceMock() 
-        
-        //  O AppCoordinator cria o RecargaCoordinator
-        let recargaCoordinator = RecargaCoordinator(
-            navigationController: self.navigationController,
-            recargaService: recargaService,
-            paymentService: paymentService 
-        )
-        
-        //  Adiciona como filho e inicia
-        childCoordinators.append(recargaCoordinator)
-        recargaCoordinator.parentCoordinator = self
-        recargaCoordinator.start()
-    }
 }

@@ -28,7 +28,7 @@ class RecargaPaymentViewModel{
     var didFinishValor: (() -> Void)? // Tela 4 para 5
     var dadosCarregados: (() -> Void)? //  Para a View saber que o saldo chegou
     var didFail: ((String) -> Void)? // Para erros (Ex: saldo insuficiente)
-    
+    var isLoading: ((Bool) -> Void)? // Avisa a View quando está carregando
     
     init(numero: String, operadora: Operadora, paymentService: PaymentMethodService) {
         self.numero = numero
@@ -46,7 +46,7 @@ class RecargaPaymentViewModel{
             switch result {
             case .success(let user):
                 //  Guarda o saldo
-                self?.saldoDisponivel = user.saldoEmConta
+                self?.saldoDisponivel = user.accountBalance
                 // Avisa a View Tela 3 que o saldo chegou
                 self?.dadosCarregados?()
             case .failure:
@@ -84,14 +84,24 @@ class RecargaPaymentViewModel{
     
     func botaoRecarregarTocado() {
         // O VM só verifica se o usuário selecionou um valor
-        guard valorSelecionado != nil else {
+        
+        guard let valorRecarga = valorSelecionado else {
             didFail?("Selecione um valor")
             return
         }
         
+        isLoading?(true)
         // Prossegue nao faz validação de saldo
-        print("ViewModel payment: Valor OK! Avisando o Coordinator (Tela 4 -> 5)")
-        didFinishValor?()
+        self.paymentService.ValidarValor(valor: valorRecarga) { [weak self] (sucesso) in
+            
+            self?.isLoading?(false)
+            if sucesso{
+                self?.didFinishValor?()
+            }
+            else{
+                self?.didFail?("Valor inválido")
+            }
+        }
     }
 }
 

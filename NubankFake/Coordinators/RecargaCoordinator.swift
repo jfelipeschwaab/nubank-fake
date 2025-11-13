@@ -16,19 +16,19 @@ class RecargaCoordinator: Coordinator {
     
     
     //dependencias que ele vai precisar
-    private let recargaService: RecargaServiceProtocol
+    private let recargaService: RecargaServiceProtocol = RecargaServiceMock()
     private var paymentService = PaymentMethodServiceMock()
+    
+    
     
     
     // Precisa guardar o VM para reusar na Tela 4
     private var paymentViewModel: RecargaPaymentViewModel?
     
     //app vai chamar isso
-    init(navigationController: UINavigationController, recargaService: RecargaServiceProtocol, paymentService: PaymentMethodServiceMock){
+    init(navigationController: UINavigationController){
         
         self.navigationController = navigationController
-        self.recargaService = recargaService
-        self.paymentService = paymentService
         
     }
     
@@ -110,9 +110,12 @@ class RecargaCoordinator: Coordinator {
         guard let viewModel = self.paymentViewModel else { return }
         
         // ouve o callback da Tela 4
+        
+        
         viewModel.didFinishValor = { [weak self] in
+            self?.navigationController.popToRootViewController(animated: true)
             print("COORDINATOR: Recebeu 'Valor OK'. Próximo passo: Senha.")
-            // self?.NavegaSenha() // proxima tela
+            self?.parentCoordinator?.childDidFinish(self)
         }
         
         
