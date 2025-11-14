@@ -6,3 +6,9 @@
 //
 
 import Foundation
+import UIKit
+
+struct HomeModel {
+    let name: String
+    let accountBalance: Double
+}
