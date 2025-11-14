@@ -18,15 +18,15 @@ import Foundation
 
 final class BuilderPixTransaction {
     //MARK: Campos do destinatário (preenchidos por pixData)
-    private var recipientName: String?
-    private var cidade: String?
-    private var recipientBank: String?
-    private var recipientCPF: String?
+    private(set) var recipientName: String?
+    private(set) var cidade: String?
+    private(set) var recipientBank: String?
+    private(set) var recipientCPF: String?
     
     
     //MARK: Campos de transação
-    private var pixKey: String?
-    private var value: Double?
+    private(set) var pixKey: String?
+    private(set) var value: Double?
     
     
     init () {}

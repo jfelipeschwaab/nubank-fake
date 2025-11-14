@@ -6,24 +6,38 @@
 //
 
 import UIKit
+import Combine
 
 final class PixConfirmationViewController: UIViewController {
     
-    weak var coordinator: PixCoordinator?
+    private var viewModel: PixRecipientViewModel?
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Properties
-    private var hasValue: Bool
-    private var value: Double?
+    private var pixData: PixData?
+    private var hasValue: Bool //
+    private var value: Double? //
     
     // MARK: - Init
-    init(hasValue: Bool = false, value: Double? = nil) {
+    
+    /// Novo Init para MVVM (usado por `showPixConfirmationScreen`)
+    init(viewModel: PixRecipientViewModel, hasValue: Bool = false, value: Double? = nil) { //
+        self.viewModel = viewModel //
         self.hasValue = hasValue
         self.value = value
+        super.init(nibName: nil, bundle: nil) //
+    }
+    
+    /// Init existente (usado por `showSecondPixConfirmationScreen`)
+    init(hasValue: Bool = false, value: Double? = nil) { //
+        self.hasValue = hasValue
+        self.value = value
+        self.pixData = nil
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented") 
     }
 
     // MARK: - Subviews
@@ -39,7 +53,7 @@ final class PixConfirmationViewController: UIViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Nome completo" // TODO: substituir por dados da VM
+        label.text = "Nome completo"
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .secondaryLabel
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +62,24 @@ final class PixConfirmationViewController: UIViewController {
     
     private let nameValueLabel: UILabel = {
         let label = UILabel()
-        label.text = "João da Silva" // TODO: substituir por dados da VM
+        label.text = "..."
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let cidadeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Cidade"
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.textColor = .secondaryLabel
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let cidadeValueLabel: UILabel = {
+        let label = UILabel()
+        label.text = "..."
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -56,7 +87,7 @@ final class PixConfirmationViewController: UIViewController {
     
     private let cpfLabel: UILabel = {
         let label = UILabel()
-        label.text = "CPF" // TODO: substituir por dados da VM
+        label.text = "CPF"
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .secondaryLabel
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +96,7 @@ final class PixConfirmationViewController: UIViewController {
     
     private let cpfValueLabel: UILabel = {
         let label = UILabel()
-        label.text = "123.456.789-00" // TODO: substituir por dados da VM
+        label.text = "..."
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -73,7 +104,7 @@ final class PixConfirmationViewController: UIViewController {
     
     private let bankLabel: UILabel = {
         let label = UILabel()
-        label.text = "Instituição" // TODO: substituir por dados da VM
+        label.text = "Instituição"
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .secondaryLabel
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -82,15 +113,15 @@ final class PixConfirmationViewController: UIViewController {
     
     private let bankValueLabel: UILabel = {
         let label = UILabel()
-        label.text = "Nu Pagamentos S.A. (260)" // TODO: substituir por dados da VM
+        label.text = "..."
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
-        label.text = "Valor" // TODO: substituir por dados da VM
+        label.text = "Valor"
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .secondaryLabel
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +140,7 @@ final class PixConfirmationViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let confirmButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Confirmar", for: .normal)
@@ -129,7 +160,7 @@ final class PixConfirmationViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,19 +168,22 @@ final class PixConfirmationViewController: UIViewController {
         setupView()
         setupLayout()
         setupActions()
+
+        if viewModel != nil {
+            setupBindings()
+        }
     }
-    
-    // MARK: - Setup
+
     private func setupView() {
         view.backgroundColor = .systemBackground
         var subviews: [UIView] = [
             titleLabel,
             nameLabel, nameValueLabel,
+            cidadeLabel, cidadeValueLabel,
             cpfLabel, cpfValueLabel,
             bankLabel, bankValueLabel
         ]
-        
-        // Se houver valor, adiciona também os labels de valor
+
         if hasValue {
             subviews.append(contentsOf: [valueLabel, valueValueLabel])
         }
@@ -157,7 +191,7 @@ final class PixConfirmationViewController: UIViewController {
         subviews.append(contentsOf: [confirmButton, cancelButton])
         subviews.forEach(view.addSubview)
     }
-    
+
     private func setupLayout() {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
@@ -170,7 +204,13 @@ final class PixConfirmationViewController: UIViewController {
             nameValueLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
             nameValueLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             
-            cpfLabel.topAnchor.constraint(equalTo: nameValueLabel.bottomAnchor, constant: 20),
+            cidadeLabel.topAnchor.constraint(equalTo: nameValueLabel.bottomAnchor, constant: 20),
+            cidadeLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            
+            cidadeValueLabel.topAnchor.constraint(equalTo: cidadeLabel.bottomAnchor, constant: 4),
+            cidadeValueLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            
+            cpfLabel.topAnchor.constraint(equalTo: cidadeValueLabel.bottomAnchor, constant: 20),
             cpfLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
             
             cpfValueLabel.topAnchor.constraint(equalTo: cpfLabel.bottomAnchor, constant: 4),
@@ -178,7 +218,7 @@ final class PixConfirmationViewController: UIViewController {
             
             bankLabel.topAnchor.constraint(equalTo: cpfValueLabel.bottomAnchor, constant: 20),
             bankLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            
+
             bankValueLabel.topAnchor.constraint(equalTo: bankLabel.bottomAnchor, constant: 4),
             bankValueLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
         ])
@@ -187,7 +227,7 @@ final class PixConfirmationViewController: UIViewController {
             NSLayoutConstraint.activate([
                 valueLabel.topAnchor.constraint(equalTo: bankValueLabel.bottomAnchor, constant: 20),
                 valueLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-                
+
                 valueValueLabel.topAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: 4),
                 valueValueLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
                 
@@ -213,6 +253,38 @@ final class PixConfirmationViewController: UIViewController {
         confirmButton.addTarget(self, action: #selector(didTapConfirm), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
     }
+
+    private func setupBindings() {
+        guard let viewModel = viewModel else { return }
+        
+        viewModel.$recipientName
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newName in
+                self?.nameValueLabel.text = newName
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$cidade
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newCidade in
+                self?.cidadeValueLabel.text = newCidade
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$recipientCPF
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newCPF in
+                self?.cpfValueLabel.text = newCPF
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$recipientBank
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newBank in
+                self?.bankValueLabel.text = newBank
+            }
+            .store(in: &cancellables)
+    }
     
     // MARK: - Actions
     @objc private func didTapConfirm() {
@@ -226,7 +298,7 @@ final class PixConfirmationViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "Fechar", style: .default))
             present(alert, animated: true)
         } else {
-            coordinator?.showPixValueScreen()
+            viewModel?.didTapConfirm()
         }
     }
     

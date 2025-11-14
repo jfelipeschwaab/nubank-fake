@@ -10,22 +10,23 @@ import Combine
 
 class PixValueViewModel {
     
-    // --- Dados de Entrada ---
-    let pixData: PixData
+    private let builder: BuilderPixTransaction
+    private weak var coordinator: PixCoordinator?
     
-    // --- Callbacks de Navegação ---
-    var onValueConfirmed: ((PixData, Double) -> Void)?
-    
-    // --- Estado para a View (Data Binding) ---
-    // A View (UITextField) deve estar bindada a esta property
-    @Published var valueString: String = "R$ 0,00"
+    @Published var valueString: String = "0,00"
     @Published var isValidValue: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(pixData: PixData) {
-        self.pixData = pixData
+    // O init agora recebe o Builder e o Coordinator, mantendo o padrão das telas anteriores
+    init(builder: BuilderPixTransaction, coordinator: PixCoordinator) {
+        self.builder = builder
+        self.coordinator = coordinator
         
+        setupBindings()
+    }
+    
+    private func setupBindings() {
         // Observa a string de valor para validar se é > 0
         $valueString
             .map { [weak self] strValue -> Double in
@@ -36,20 +37,24 @@ class PixValueViewModel {
             .store(in: &cancellables)
     }
     
-    /// Converte a string de moeda (ex: "R$ 10,50") para Double (10.50)
+    /// Converte a string (ex: "10,50") para Double (10.50)
     private func parseDouble(from currencyString: String) -> Double {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.number(from: currencyString)?.doubleValue ?? 0.0
+        let cleanString = currencyString
+            .replacingOccurrences(of: "R$", with: "")
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: ".", with: "")
+            .replacingOccurrences(of: ".", with: ",")
+        
+        return Double(cleanString) ?? 0.0
     }
     
     /// Ação chamada pelo botão "Avançar" da View
     func confirmValue() {
         let value = parseDouble(from: valueString)
+        
         if value > 0 {
-            // Passa o PixData + o novo Valor para a próxima tela
-            onValueConfirmed?(pixData, value)
+            builder.setValue(value)
+            coordinator?.showSecondPixConfirmationScreen(valueToConfirm: value)
         }
     }
 }

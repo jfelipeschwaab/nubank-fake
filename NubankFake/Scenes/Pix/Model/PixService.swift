@@ -9,7 +9,7 @@ import Foundation
 
 class PixService: PixServiceProtocol {
     
-    private let MOCKED_VALID_KEY = ["chavevalida@nubank.com", ""]
+    private let MOCKED_VALID_KEY = ["teste1@nubank.com", "teste2@nubank.com"]
     
     func fetchPixDetails(forKey key: String) async -> Result<PixData, Error> {
         try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -27,12 +27,19 @@ class PixService: PixServiceProtocol {
     }
     
     private func returnPixInformation(key: String) -> PixData {
-        if key == "chavevalida@nubank.com" {
+        if key == "teste1@nubank.com" {
             return PixData(
                 recipientName: "BetaEL",
-                cidade: "Vanderley",
+                cidade: "Wanderley",
                 recipientBank: "Nu pagamentos S.A.",
                 recipientCPF: "***.673.***-40",
+            )
+        }else if key == "teste2@nubank.com" {
+            return PixData(
+            recipientName: "BetaH",
+            cidade: "Betalândia",
+            recipientBank: "Nu pagamentos S.A.",
+            recipientCPF: "***.834.***-20"
             )
         }
         fatalError("Chave '\(key)' não encontrada")
