@@ -5,7 +5,6 @@
 //  Created by João Felipe Schwaab on 11/11/25.
 //
 
-
 import UIKit
 import Combine
 
@@ -13,7 +12,6 @@ final class PixKeyViewController: UIViewController {
     
     var viewModel : PixKeyViewModel
     private var cancellables = Set<AnyCancellable>()
-
     
     init(viewModel: PixKeyViewModel) {
         self.viewModel = viewModel
@@ -87,7 +85,6 @@ final class PixKeyViewController: UIViewController {
             continueButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
-    
     
     @objc private func didTapContinue() {
         viewModel.validateKey()

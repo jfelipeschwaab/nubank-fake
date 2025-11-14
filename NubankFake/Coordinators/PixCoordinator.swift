@@ -8,8 +8,6 @@
 import Foundation
 import UIKit
 
-
-
 final class PixCoordinator : Coordinator {
     
     weak var parentCoordinator : Coordinator?
@@ -23,17 +21,12 @@ final class PixCoordinator : Coordinator {
     }
     
     func start() {
-//        let pixViewModel = nil //TODO: Implementar pixViewModel
-//        let pixViewModel = nil //TODO: Implementar ViewModel na View
         let pixViewController = PixViewController()
-        //pixViewModel.coordinator = self
-        //TODO: Quem deve ter a referência do coordinator será a viewModel, está sendo atribuido à View por motivos de teste
         pixViewController.coordinator = self
         navigationController.pushViewController(pixViewController, animated: true)
     }
     
     func showPixKeyScreen() {
-        //TODO: Implementar ViewModel na View
         let pixService = PixService()
         let viewModel = PixKeyViewModel(pixService: pixService, builder: self.builder, coordinator: self)
         let pixKeyViewController = PixKeyViewController(viewModel: viewModel)
@@ -41,25 +34,20 @@ final class PixCoordinator : Coordinator {
     }
     
     func showPixConfirmationScreen() {
-        //TODO: Implementar ViewModel na View
-        let pixConfirmationViewController = PixConfirmationViewController()
-        pixConfirmationViewController.coordinator = self
+        let viewModel = PixRecipientViewModel(builder: self.builder, coordinator: self)
+        let pixConfirmationViewController = PixConfirmationViewController(viewModel: viewModel)
         navigationController.pushViewController(pixConfirmationViewController, animated: true)
     }
     
     func showPixValueScreen() {
-        //TODO: Implementar ViewModel na View
-        let pixValueViewController = PixValueViewController()
-        pixValueViewController.coordinator = self
+        let viewModel = PixValueViewModel(builder: self.builder, coordinator: self)
+        let pixValueViewController = PixValueViewController(viewModel: viewModel)
         navigationController.pushViewController(pixValueViewController, animated: true)
     }
     
-    func showSecondPixConfirmationScreen(valueToConfirm : Double) {
-        //TODO: Implementar ViewModel na View
-        let pixConfirmationViewController = PixConfirmationViewController(hasValue: true, value: valueToConfirm)
-        
+    func showSecondPixConfirmationScreen(valueToConfirm: Double) {
+        let viewModel = PixRecipientViewModel(builder: self.builder, coordinator: self)
+        let pixConfirmationViewController = PixConfirmationViewController(viewModel: viewModel,hasValue: true, value: valueToConfirm)
         navigationController.pushViewController(pixConfirmationViewController, animated: true)
     }
 }
-
-

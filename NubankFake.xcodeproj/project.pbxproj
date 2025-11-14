@@ -182,7 +182,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 
 				DEVELOPMENT_TEAM = PMFLCRL2L8;
-
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NubankFake/Info.plist;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Para sua segurança e conveniência, use o Face ID para acessar sua conta Nubank.";

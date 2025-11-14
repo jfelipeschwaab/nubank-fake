@@ -6,29 +6,30 @@
 //
 
 import Foundation
+import Combine
 
 class PixRecipientViewModel {
+
+    private let builder: BuilderPixTransaction
+    weak var coordinator: PixCoordinator?
     
-    // --- Dados de Entrada ---
-    let pixData: PixData
+    @Published var recipientName: String
+    @Published var recipientCPF: String
+    @Published var recipientBank: String
+    @Published var cidade: String
     
-    // --- Callbacks de Navegação ---
-    var onRecipientConfirmed: ((PixData) -> Void)?
-    
-    // --- Estado para a View (Propriedades Formatadas) ---
-    // A View apenas lê essas propriedades
-    var recipientName: String { pixData.recipientName }
-    var recipientCPF: String { pixData.recipientCPF }
-    var recipientBank: String { pixData.recipientBank }
-    var recipientCity: String { pixData.cidade }
-    
-    init(pixData: PixData) {
-        self.pixData = pixData
+    init(builder: BuilderPixTransaction, coordinator: PixCoordinator) {
+        self.builder = builder
+        self.coordinator = coordinator
+        
+        self.recipientName = builder.recipientName ?? "Nome não encontrado"
+        self.cidade = builder.cidade ?? "Cidade não encontrada"
+        self.recipientCPF = builder.recipientCPF ?? "***.***.***-**"
+        self.recipientBank = builder.recipientBank ?? "Instituição não encontrada"
     }
     
-    /// Ação chamada pelo botão "Transferir" da View
-    func confirmRecipient() {
-        // Passa o mesmo PixData para a próxima tela (a de Valor)
-        onRecipientConfirmed?(pixData)
+    /// Ação chamada pelo botão "Confirmar" da View
+    func didTapConfirm() {
+        coordinator?.showPixValueScreen()
     }
 }
