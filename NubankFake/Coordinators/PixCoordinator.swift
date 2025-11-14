@@ -50,4 +50,9 @@ final class PixCoordinator : Coordinator {
         let pixConfirmationViewController = PixConfirmationViewController(viewModel: viewModel,hasValue: true, value: valueToConfirm)
         navigationController.pushViewController(pixConfirmationViewController, animated: true)
     }
+    
+    func didFinish() {
+        parentCoordinator?.childDidFinish(self)
+        self.navigationController.popToRootViewController(animated: true)
+    }
 }

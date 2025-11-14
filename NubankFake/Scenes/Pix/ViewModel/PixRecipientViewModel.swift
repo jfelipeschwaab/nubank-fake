@@ -32,4 +32,8 @@ class PixRecipientViewModel {
     func didTapConfirm() {
         coordinator?.showPixValueScreen()
     }
+    
+    func didFinishTransaction() {
+        coordinator?.didFinish()
+    }
 }

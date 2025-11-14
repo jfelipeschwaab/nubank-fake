@@ -289,13 +289,17 @@ final class PixConfirmationViewController: UIViewController {
     // MARK: - Actions
     @objc private func didTapConfirm() {
         if hasValue {
-            // TODO: finalizar transação ou mostrar tela de sucesso
             let alert = UIAlertController(
                 title: "Transferência enviada!",
                 message: "O valor foi transferido com sucesso ✅",
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "Fechar", style: .default))
+
+            alert.addAction(UIAlertAction(title: "Fechar", style: .default, handler: { [weak self] _ in
+                guard let viewModel = self?.viewModel else { return }
+                viewModel.didFinishTransaction()
+            }))
+
             present(alert, animated: true)
         } else {
             viewModel?.didTapConfirm()
