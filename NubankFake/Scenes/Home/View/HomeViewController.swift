@@ -35,10 +35,10 @@ class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: HomeViewDelegate {
-//    func didTapPix() {
-//        viewModel.goToPix()
-//
-//    }
+    func didTapPix() {
+        viewModel.goToPix()
+
+    }
     
     func didTapRecharge() {
         viewModel.goToRecharge()

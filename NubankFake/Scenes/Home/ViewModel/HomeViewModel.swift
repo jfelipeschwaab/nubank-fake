@@ -28,6 +28,9 @@ class HomeViewModel{
     
     func goToRecharge() {
         coordinator?.showRecharge()
-
+    }
+    
+    func goToPix() {
+        coordinator?.showPix()
     }
 }

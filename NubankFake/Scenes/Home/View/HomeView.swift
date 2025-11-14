@@ -10,7 +10,7 @@ import UIKit
 
 protocol HomeViewDelegate: AnyObject {
     func didTapRecharge()
-//    func didTapPix()
+    func didTapPix()
 }
 
 class HomeView: UIView {
@@ -41,7 +41,7 @@ class HomeView: UIView {
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.layer.cornerRadius = 25
-//        button.addTarget(nil, action: #selector(pixTapped), for: .touchUpInside)
+        button.addTarget(nil, action: #selector(pixTapped), for: .touchUpInside)
         return button
     }()
     private let labelTransfer: UILabel = {
@@ -130,9 +130,9 @@ class HomeView: UIView {
         saldoMensagem.text = "Saldo: R$ \(data.accountBalance)"
     }
     
-//    @objc private func pixTapped() {
-//        delegate?.didTapRecharge()
-//    }
+    @objc private func pixTapped() {
+        delegate?.didTapPix()
+    }
     @objc private func rechargeTapped() {
         delegate?.didTapRecharge()
     }
